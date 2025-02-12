@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Shopee</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
+    .container { 
+      max-width: 400px; 
+      margin: auto; 
+      background: #fff; 
+      padding: 20px; 
+      border-radius: 10px; 
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); 
+    }
+    h3 { text-align: center; margin-bottom: 20px; }
+    input, select { 
+      width: 100%; 
+      padding: 10px; 
+      margin-bottom: 15px; 
+      border: 1px solid #ccc; 
+      border-radius: 5px; 
+    }
+    button { 
+      width: 100%; 
+      padding: 15px; 
+      background-color: #4CAF50; 
+      color: white; 
+      border: none; 
+      border-radius: 5px; 
+      font-size: 16px; 
+      cursor: pointer; 
+    }
+    button:hover { background-color: #45a049; }
+    .result { 
+      margin-top: 20px; 
+      padding: 15px; 
+      background-color: #e9ecef; 
+      border-radius: 5px; 
+      font-weight: bold; 
+    }
+    .details { margin-top: 10px; }
+    .details div { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>CALCULADORA SHOPEE</h3>
+    <input type="number" id="custo" placeholder="Custo do Produto (R$)" step="0.01">
+    <select id="embalagem">
+      <option value="0.03">P - R$ 0,03</option>
+      <option value="0.07">M - R$ 0,07</option>
+      <option value="0.12">G - R$ 0,12</option>
+      <option value="2.13">CX - R$ 2,13</option>
+      <option value="0.00">VAZIO - R$ 0,00</option>
+    </select>
+    <button id="calcular">Calcular Preço de Venda</button>
+    <div class="result" id="resultado"></div>
+    <div class="details" id="detalhes"></div>
+  </div>
+
+  <script>
+    document.getElementById('calcular').addEventListener('click', function() {
+      let custo = parseFloat(document.getElementById('custo').value);
+      let embalagem = parseFloat(document.getElementById('embalagem').value);
+
+      if (isNaN(custo)) {
+        document.getElementById('resultado').innerText = 'Por favor, insira um valor válido.';
+        return;
+      }
+
+      // Custos fixos
+      const etiqueta = 0.02;
+      const taxaServicoShopee = 4.00;
+      const custosFixos = embalagem + etiqueta + taxaServicoShopee;
+
+      // Taxas variáveis
+      const taxaShopee = 0.20;
+      const comissao = 0.01;
+      const imposto = 0.085;
+      const margemLucro = 0.15;
+
+      // Fórmula para o preço de venda
+      let precoVenda = (custo + custosFixos) / (1 - (taxaShopee + comissao + imposto + margemLucro));
+
+      // Detalhes dos cálculos
+      let detalheCustoFixo = `
+        <strong>Custos Fixos: R$ ${custosFixos.toFixed(2)}</strong>
+        <div>Embalagem: R$ ${embalagem.toFixed(2)}</div>
+        <div>Etiqueta: R$ ${etiqueta.toFixed(2)}</div>
+        <div>Taxa Serviço Shopee: R$ ${taxaServicoShopee.toFixed(2)}</div>
+      `;
+      let detalheTaxaShopee = `Taxa Shopee (20%): R$ ${(taxaShopee * precoVenda).toFixed(2)}`;
+      let detalheComissao = `Comissão (1%): R$ ${(comissao * precoVenda).toFixed(2)}`;
+      let detalheImposto = `Imposto (8,5%): R$ ${(imposto * precoVenda).toFixed(2)}`;
+      let detalheMargemLucro = `Margem de Lucro (15%): R$ ${(margemLucro * precoVenda).toFixed(2)}`;
+
+      document.getElementById('resultado').innerText = `Preço de Venda: R$ ${precoVenda.toFixed(2)}`;
+      document.getElementById('detalhes').innerHTML = `
+        ${detalheCustoFixo}
+        <div>${detalheTaxaShopee}</div>
+        <div>${detalheComissao}</div>
+        <div>${detalheImposto}</div>
+        <div>${detalheMargemLucro}</div>
+      `;
+    });
+  </script>
+</body>
+</html>
